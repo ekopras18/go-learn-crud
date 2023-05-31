@@ -1,8 +1,8 @@
 package categoryModel
 
 import (
-	"go-learn-crud/config"
-	"go-learn-crud/entities"
+	"go-learn-crud-mysql/config"
+	"go-learn-crud-mysql/entities"
 )
 
 func Get() []entities.Category {

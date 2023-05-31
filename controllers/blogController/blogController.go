@@ -1,8 +1,8 @@
-package categoriesController
+package blogController
 
 import (
 	"go-learn-crud-mysql/entities"
-	"go-learn-crud-mysql/models/categoryModel"
+	"go-learn-crud-mysql/models/blogModel"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -10,13 +10,13 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	categories := categoryModel.Get()
+	blogs := blogModel.Get()
 
 	data := map[string]any{
-		"categories": categories,
+		"blogs": blogs,
 	}
 
-	tmpl, err := template.ParseFiles("views/category/index.html")
+	tmpl, err := template.ParseFiles("views/blog/index.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -27,7 +27,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 func Create(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		tmpl, err := template.ParseFiles("views/category/create.html")
+		tmpl, err := template.ParseFiles("views/blog/create.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -37,18 +37,22 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		var category entities.Category
+		var blog entities.Blog
 
-		category.Name = r.FormValue("name")
-		category.CreatedAt = time.Now()
-		category.UpdatedAt = time.Now()
+		blog.Title = r.FormValue("title")
+		blog.Date = time.Now()
+		blog.Author = r.FormValue("author")
+		blog.Tags = r.FormValue("tags")
+		blog.Content = []byte(r.FormValue("content"))
+		blog.CreatedAt = time.Now()
+		blog.UpdatedAt = time.Now()
 
-		if ok := categoryModel.Store(category); !ok {
-			tmpl, _ := template.ParseFiles("views/category/create.html")
+		if ok := blogModel.Store(blog); !ok {
+			tmpl, _ := template.ParseFiles("views/blog/create.html")
 			tmpl.Execute(w, nil)
 		}
 
-		http.Redirect(w, r, "/categories", http.StatusSeeOther)
+		http.Redirect(w, r, "/blog", http.StatusSeeOther)
 
 	}
 
@@ -56,7 +60,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 func Edit(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		tmpl, err := template.ParseFiles("views/category/edit.html")
+		tmpl, err := template.ParseFiles("views/blog/edit.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -71,17 +75,17 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		category := categoryModel.Show(id)
+		blog := blogModel.Show(id)
 
 		data := map[string]any{
-			"category": category,
+			"blog": blog,
 		}
 
 		tmpl.Execute(w, data)
 	}
 
 	if r.Method == "POST" {
-		var category entities.Category
+		var blog entities.Blog
 
 		idString := r.FormValue("id")
 		id, err := strconv.Atoi(idString)
@@ -91,17 +95,21 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// category.Id = id
-		category.Name = r.FormValue("name")
-		category.UpdatedAt = time.Now()
+		blog.Title = r.FormValue("title")
+		blog.Date = time.Now()
+		blog.Author = r.FormValue("author")
+		blog.Tags = r.FormValue("tags")
+		blog.Content = []byte(r.FormValue("content"))
+		blog.UpdatedAt = time.Now()
 
-		if ok := categoryModel.Update(id, category); !ok {
+		if ok := blogModel.Update(id, blog); !ok {
 			// tmpl, _ := template.ParseFiles("views/category/edit.html")
 			// tmpl.Execute(w, nil)
 			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
 			return
 		}
 
-		http.Redirect(w, r, "/categories", http.StatusSeeOther)
+		http.Redirect(w, r, "/blog", http.StatusSeeOther)
 
 	}
 
@@ -115,9 +123,9 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	if err := categoryModel.Destroy(id); err != nil {
+	if err := blogModel.Destroy(id); err != nil {
 		panic(err)
 	}
 
-	http.Redirect(w, r, "/categories", http.StatusSeeOther)
+	http.Redirect(w, r, "/blog", http.StatusSeeOther)
 }

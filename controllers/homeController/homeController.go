@@ -1,16 +1,23 @@
 package homeController
 
 import (
+	"go-learn-crud-mysql/utility/baseUtility"
 	"html/template"
 	"net/http"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	// Data yang ingin Anda tampilkan di konten
+	data := struct {
+		Title string
+		Text  string
+	}{
+		Title: "Selamat datang",
+		Text:  "Halaman Utama CRUD x Mysql.",
 	}
 
-	tmpl.Execute(w, nil)
+	tmpl, err := template.ParseFiles("views/layout/base.html", "views/index.html")
+	baseUtility.StatusInternalServer(w, err)
+
+	tmpl.Execute(w, data)
 }
