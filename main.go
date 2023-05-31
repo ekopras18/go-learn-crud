@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go-learn-crud-mysql/config"
 	"go-learn-crud-mysql/controllers/blogController"
-	"go-learn-crud-mysql/controllers/categoriesController"
 	"go-learn-crud-mysql/controllers/homeController"
 	"go-learn-crud-mysql/utility/baseUtility"
 	"log"
@@ -19,15 +18,10 @@ func main() {
 	// Initialize routes
 	http.HandleFunc("/", homeController.Index)
 
-	//categories
-	http.HandleFunc("/categories", categoriesController.Index)
-	http.HandleFunc("/categories/create", categoriesController.Create)
-	http.HandleFunc("/categories/edit", categoriesController.Edit)
-	http.HandleFunc("/categories/delete", categoriesController.Delete)
-
 	//blog
 	http.HandleFunc("/blog", blogController.Index)
 	http.HandleFunc("/blog/create", blogController.Create)
+	http.HandleFunc("/blog/show", blogController.Show)
 	http.HandleFunc("/blog/edit", blogController.Edit)
 	http.HandleFunc("/blog/delete", blogController.Delete)
 

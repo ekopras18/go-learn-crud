@@ -3,6 +3,7 @@ package blogController
 import (
 	"go-learn-crud-mysql/entities"
 	"go-learn-crud-mysql/models/blogModel"
+	"go-learn-crud-mysql/utility/baseUtility"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -13,27 +14,31 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	blogs := blogModel.Get()
 
 	data := map[string]any{
-		"blogs": blogs,
+		"blogs":       blogs,
+		"title":       "Post Blog",
+		"page_tittle": "List of Blogs.",
+		"page_active": "blog",
 	}
 
-	tmpl, err := template.ParseFiles("views/blog/index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	tmpl, err := template.ParseFiles("views/layout/base.html", "views/blog/index.html")
+	baseUtility.StatusInternalServer(w, err)
 
 	tmpl.Execute(w, data)
 }
 
 func Create(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		tmpl, err := template.ParseFiles("views/blog/create.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+
+		data := map[string]any{
+			"title":       "Create Blog",
+			"page_tittle": "Form of Blogs.",
+			"page_active": "blog",
 		}
 
-		tmpl.Execute(w, nil)
+		tmpl, err := template.ParseFiles("views/layout/base.html", "views/blog/create.html")
+		baseUtility.StatusInternalServer(w, err)
+
+		tmpl.Execute(w, data)
 	}
 
 	if r.Method == "POST" {
@@ -58,27 +63,47 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Edit(w http.ResponseWriter, r *http.Request) {
+func Show(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		tmpl, err := template.ParseFiles("views/blog/edit.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		tmpl, err := template.ParseFiles("views/layout/base.html", "views/blog/show.html")
+		baseUtility.StatusInternalServer(w, err)
 
 		idString := r.URL.Query().Get("id")
 		id, err := strconv.Atoi(idString)
+		baseUtility.Catch(err)
 
-		if err != nil {
-			// http.Error(w, err.Error(), http.StatusInternalServerError)
-			// return
-			panic(err)
+		blog := blogModel.Show(id)
+		blogs := blogModel.Get()
+
+		data := map[string]any{
+			"blog":        blog,
+			"blogs":       blogs,
+			"title":       "Read Blog",
+			"page_tittle": "Read Blogs.",
+			"page_active": "blog",
 		}
+
+		tmpl.Execute(w, data)
+	}
+
+}
+
+func Edit(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		tmpl, err := template.ParseFiles("views/layout/base.html", "views/blog/edit.html")
+		baseUtility.StatusInternalServer(w, err)
+
+		idString := r.URL.Query().Get("id")
+		id, err := strconv.Atoi(idString)
+		baseUtility.Catch(err)
 
 		blog := blogModel.Show(id)
 
 		data := map[string]any{
-			"blog": blog,
+			"blog":        blog,
+			"title":       "Edit Blog",
+			"page_tittle": "Form of Blogs.",
+			"page_active": "blog",
 		}
 
 		tmpl.Execute(w, data)

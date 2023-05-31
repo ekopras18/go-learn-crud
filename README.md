@@ -14,7 +14,7 @@ firstime you need instal package golang-migrate
 - original :
 
 ```bash
-	migrate create -ext sql  -dir <path> -seq <migration_name>
+  migrate create -ext sql  -dir <path> -seq <migration_name>
 
 ```
 example :
@@ -28,15 +28,15 @@ example :
 1. nano ~/.zshrc
 2. add alias 
 ```bash
-	alias go-migrate="migrate create -ext sql"
+  alias go-migrate="migrate create -ext sql"
 ```
 3. and then create migration like this :
 ```bash
-	go-migrate -dir <path> -seq <migration_name>
+  go-migrate -dir <path> -seq <migration_name>
 ```
 example :
 ```bash
-	go-migrate -dir config/migrations -seq tags
+  go-migrate -dir config/migrations -seq tags
 ```
 
 # how to UP
@@ -53,10 +53,10 @@ example :
 # how to DOWN
 
 ```bash
-- migrate -path <path> -database ‘<connection_string>’ -verbose down
+  migrate -path <path> -database ‘<connection_string>’ -verbose down
 ```
 
 example :
 ```bash
-- migrate -path config/migrations/ -database 'mysql://user:password@/database_name’ -verbose down
+  migrate -path config/migrations/ -database 'mysql://user:password@/database_name’ -verbose down
 ```
