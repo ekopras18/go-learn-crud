@@ -1,9 +1,11 @@
 package main
 
 import (
-	"go-learn-crud/config"
-	"go-learn-crud/controllers/categoriesController"
-	"go-learn-crud/controllers/homeController"
+	"fmt"
+	"go-learn-crud-mysql/config"
+	"go-learn-crud-mysql/controllers/blogController"
+	"go-learn-crud-mysql/controllers/homeController"
+	"go-learn-crud-mysql/utility/baseUtility"
 	"log"
 	"net/http"
 )
@@ -16,14 +18,17 @@ func main() {
 	// Initialize routes
 	http.HandleFunc("/", homeController.Index)
 
-	//
-
-	http.HandleFunc("/categories", categoriesController.Index)
-	http.HandleFunc("/categories/create", categoriesController.Create)
-	http.HandleFunc("/categories/edit", categoriesController.Edit)
-	http.HandleFunc("/categories/delete", categoriesController.Delete)
+	//blog
+	http.HandleFunc("/blog", blogController.Index)
+	http.HandleFunc("/blog/create", blogController.Create)
+	http.HandleFunc("/blog/show", blogController.Show)
+	http.HandleFunc("/blog/edit", blogController.Edit)
+	http.HandleFunc("/blog/delete", blogController.Delete)
 
 	// Run the server
 	log.Println("Server started on: http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	baseUtility.Catch(err)
+	fmt.Println("Server stopped.")
+
 }
