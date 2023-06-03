@@ -31,6 +31,4 @@ func ConnectDB() {
 	baseUtility.CatchWithMessage(err, "Error connecting to database")
 
 	DB = db
-
-	log.Println("Database connected")
 }
