@@ -1,10 +1,10 @@
 ## To Do List
 
-- [] Search Data
-- [] Auth JWT
-- [] Middleware
-- [] Dockerisation
-- [] Darkmode UI
+- [ ] Search Data
+- [ ] Auth JWT
+- [ ] Middleware
+- [ ] Dockerisation
+- [ ] Darkmode UI
 
 ## Learn Crud Golang
 
